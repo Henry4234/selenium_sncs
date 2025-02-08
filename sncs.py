@@ -2,6 +2,7 @@
 import sys,os, glob,zipfile,re,csv,threading, drivertester
 import pandas as pd
 import tkinter as tk
+from dotenv import load_dotenv
 from tkinter import ttk,filedialog,messagebox
 from tkinter.ttk import Progressbar
 from selenium import webdriver
@@ -18,7 +19,12 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Font,Alignment,Border,Side,numbers,PatternFill
 from openpyxl.formatting.rule import Rule,CellIsRule,FormulaRule
 
+load_dotenv()
 
+ac = os.getenv('SNCS_ACCOUNT')
+pw = os.getenv('SNCS_PASSWORD')
+print(ac)
+print(pw)
 def worksheet_name_generate(file_path):
     match = re.search(r"\((.*?)\).*_(\d+)\.csv", file_path)
     if match:
@@ -131,10 +137,10 @@ class DOWNLOAD:
                 wait = WebDriverWait(driver, 5)
                 #key in account & pw
                 id = wait.until(EC.element_to_be_clickable((By.ID, "mat-input-0")))
-                id.send_keys("sncstw00241")
+                id.send_keys(ac)
 
                 pw = wait.until(EC.element_to_be_clickable((By.ID, "mat-input-1")))
-                pw.send_keys("huKl00#")
+                pw.send_keys(pw)
                 # loginbtn = driver.find_element(By.XPATH, "/html/body/div[7]/fqc-login/div/div/div/fqc-login-form/div/div[1]/button")
                 #click login btn
                 loginbtn = driver.find_element(By.CLASS_NAME, "fqc-btn")
