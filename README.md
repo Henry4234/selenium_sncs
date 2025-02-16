@@ -19,11 +19,24 @@
 pip install -r requirements.txt
 ```
 # 使用方法:
+## I. sncs.py
 步驟 1: ChromeDriver 設置
-確保已安裝 Google Chrome 瀏覽器，腳本會自動根據你的瀏覽器版本處理 ChromeDriver 的下載和配置。
+   
+   確保已安裝 Google Chrome 瀏覽器，腳本會自動根據你的瀏覽器版本處理 ChromeDriver 的下載和配置。
+   
+步驟 2: 設定環境參數
+   
+   請在相同層級資料夾下，創建一個`.env`的檔案，裡面包含[XQC](https://sncs-web.com/quality/login)登入帳號及密碼
+   `.env`變數名稱如下:
+   
+```
+SNCS_ACCOUNT='ur_account'
+SNCS_PASSWORD='ur_password'
+```
+   
+步驟 3: 執行腳本
 
-步驟 2: 執行腳本
-要開始 SNCS 資料處理，請執行以下命令：
+   要開始 SNCS 資料處理，請執行以下命令：
 ```bash
 python sncs.py
 ```
@@ -36,9 +49,39 @@ python sncs.py
    
 步驟 3: Excel 報告輸出
 當流程完成後，會將 Excel 報告保存在你指定的資料夾中。
+## II. sncs_lot.py
+步驟 1: ChromeDriver 設置
 
+確保已安裝 Google Chrome 瀏覽器，腳本會自動根據你的瀏覽器版本處理 ChromeDriver 的下載和配置。
+
+步驟 2: 設定環境參數
+
+請在相同層級資料夾下，創建一個`.env`的檔案，裡面包含[sysmex academy](https://academy.sysmex.com.tw/user/login)登入帳號及密碼
+   `.env`變數名稱如下:
+   
+```
+LOT_SNCS_ACCOUNT='ur_account'
+LOT_SNCS_PASSWORD='ur_password'
+```
+   
+   要開始 SNCS_lot 資料下載，請執行以下命令：
+```bash
+python sncs_lot.py
+```
+此腳本會執行以下操作：
+
+1. 打開一個 GUI 讓你選擇下載資料夾。
+2. 在終端(terminal)中請使用者輸入批號的前四碼。
+3. 使用預設帳戶登入 academy 系統。
+4. 利用使用者輸入的前四碼進行搜尋。
+5. 將搜尋結果顯示在終端中，並請使用者選擇要下載哪一個文件。
+6. 根據使用者輸入的文件編號，下載相對應的xqn文件，並且進行解壓縮。
+   
 # 概述
 sncs.py：主要腳本，負責 SNCS 自動化、CSV 檔案處理及 Excel 報告生成。
+
+sncs_lot.py：負責 SNCS 新批號設定檔qxn下載。
+
 drivertester.py：包含自動下載、解壓縮並管理 ChromeDriver 版本的函數。
 
 # 授權
