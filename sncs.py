@@ -139,8 +139,8 @@ class DOWNLOAD:
                 id = wait.until(EC.element_to_be_clickable((By.ID, "mat-input-0")))
                 id.send_keys(ac)
 
-                pw = wait.until(EC.element_to_be_clickable((By.ID, "mat-input-1")))
-                pw.send_keys(pw)
+                password = wait.until(EC.element_to_be_clickable((By.ID, "mat-input-1")))
+                password.send_keys(pw)
                 # loginbtn = driver.find_element(By.XPATH, "/html/body/div[7]/fqc-login/div/div/div/fqc-login-form/div/div[1]/button")
                 #click login btn
                 loginbtn = driver.find_element(By.CLASS_NAME, "fqc-btn")
@@ -338,7 +338,7 @@ class DOWNLOAD:
                 standard_SD = [
                     ["0.03","0.07","0.30","1.00","0.40","0.50","0.50","0.20","7.00","0.10","0.20","1.20","1.50","1.50","0.80","2.00","0.30"],
                     ["0.04","0.14","0.50","0.80","0.40","0.50","0.50","0.20","10.00","0.16","0.20","1.10","1.20","1.10","0.80","2.00","0.20"],
-                    ["0.03","0.07","0.30","1.00","0.40","0.50","0.50","0.20","7.00","0.10","0.20","1.20","1.50","1.50","0.80","2.00","0.30"]
+                    ["0.06","0.20","0.60","1.00","0.40","0.50","0.60","0.15","12.00","0.30","0.20","1.00","1.00","1.00","1.00","2.00","0.10"]
                     ]
                 #合併单元格
                 for merge_range, _ in merge_ranges:
