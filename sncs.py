@@ -1,5 +1,5 @@
 ##autherise by Henry Tsai
-import sys,os, glob,zipfile,re,csv,threading, drivertester
+import sys,os, glob,zipfile,re,csv,threading, drivertester, sncs_requests, requests
 import pandas as pd
 import tkinter as tk
 from dotenv import load_dotenv
@@ -7,7 +7,6 @@ from tkinter import ttk,filedialog,messagebox
 from tkinter.ttk import Progressbar
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -146,75 +145,86 @@ class DOWNLOAD:
                 loginbtn = driver.find_element(By.CLASS_NAME, "fqc-btn")
                 loginbtn.click()
                 sleep(2)
-                #get to the csv website
-                driver.get("https://sncs-web.com/quality/measurement-csv")
-                WebDriverWait(driver,10).until(
-                EC.presence_of_all_elements_located((By.CLASS_NAME,"mat-radio-label-content"))
-                )
-                #click the cookie policy
-                cc = driver.find_element(By.CLASS_NAME, "cc-allow")
-                cc.click()
-                WebDriverWait(driver,10).until(
-                EC.presence_of_all_elements_located((By.CLASS_NAME,"mat-radio-label-content"))
-                )
-                #預設是month，點選成Lot
-                lotdot = driver.find_element(By.XPATH, "/html/body/div[7]/m-pages/div/div/div/fqc-intraday-data-csv/fqc-portlet/div/div[2]/div[1]/fqc-search-condition/div/form/div[1]/div/mat-radio-group/mat-radio-button[2]/label/span[1]/span[2]")
-                lotdot.click()
-                #等待網頁更改成Lot
-                WebDriverWait(driver,10).until(
-                EC.presence_of_all_elements_located((By.CLASS_NAME,"ng-tns-c74-4"))
-                )
-                # 點選control 的選項"XN-CHECK_CLOSED"
-                control_slc = driver.find_element(By.CLASS_NAME, "ng-tns-c74-4")
-                control_slc.click()
-                # sleep(2)
-                control_opt = driver.find_element(By.CLASS_NAME, "mat-option-text")
-                control_opt.click()
-                # sleep(2)
-                ##將需要下載的Lot列成一個List，跑LOOP三次
-                lot_lst=["mat-option-18","mat-option-19","mat-option-20"]
-                ##Lot_name_lst是之後需要修改rar或者CSV檔名需要用到的
-                self.lot_name_lst=[]
-                for id in lot_lst:
-                    #點選Lot選項，叫出下拉式選單
-                    lotno_slc = driver.find_element(By.CLASS_NAME, "ng-tns-c74-6")
-                    lotno_slc.click()
-                    sleep(2)
-                    ##點選相應的Lot No
-                    lotno_opt = driver.find_element(By.ID, id)
-                    lotno_name = driver.find_element(By.ID, id).find_element(By.CLASS_NAME,"mat-option-text").text
-                    self.lot_name_lst.append(lotno_name)
-                    lotno_opt.click()
-                    # sleep(2)
-                    #點選搜尋按鈕
-                    src_btn = driver.find_element(By.XPATH, "/html/body/div[7]/m-pages/div/div/div/fqc-intraday-data-csv/fqc-portlet/div/div[2]/div[1]/fqc-search-condition/div/form/div[2]/div[4]/button")
-                    src_btn.click()
-                    ##等待網頁下方出現chkbox，再繼續操作
-                    WebDriverWait(driver,30).until(
-                        EC.presence_of_all_elements_located((By.CLASS_NAME,"mat-row"))
-                    )
-                    # sleep(5)
-                    spinner_locator = (By.XPATH, '/html/body/div[7]/m-pages/div/div/div/fqc-intraday-data-csv/fqc-portlet/div/div[2]/div[2]/fqc-analyzer-list/div[1]/mat-spinner')
-                    WebDriverWait(driver, 30).until(EC.invisibility_of_element_located(spinner_locator))
-                    #點選兩個chkbox
-                    chkbox_1 = driver.find_element(By.XPATH, "/html/body/div[7]/m-pages/div/div/div/fqc-intraday-data-csv/fqc-portlet/div/div[2]/div[2]/fqc-analyzer-list/div[3]/div/table/tbody/tr[1]/td[1]/mat-checkbox")
-                    chkbox_1.click()
+                cookies = driver.get_cookies()  # 取得瀏覽器目前所有的 Cookie
+#################################################################################################                
+                # #get to the csv website
+                # driver.get("https://sncs-web.com/quality/measurement-csv")
+                # WebDriverWait(driver,10).until(
+                # EC.presence_of_all_elements_located((By.CLASS_NAME,"mat-mdc-radio-button"))
+                # )
+                # #click the cookie policy
+                # cc = driver.find_element(By.CLASS_NAME, "cc-allow")
+                # cc.click()
+                # WebDriverWait(driver,10).until(
+                # EC.presence_of_all_elements_located((By.CLASS_NAME,"mat-mdc-radio-button"))
+                # )
+                # #預設是month，點選成Lot
+                # # lotdot = driver.find_element(By.XPATH, "/html/body/div[7]/m-pages/div/div/div/fqc-intraday-data-csv/fqc-portlet/div/div[2]/div[1]/fqc-search-condition/div/form/div[1]/div/mat-radio-group/mat-radio-button[2]/label/span[1]/span[2]")
+                # lotdot = driver.find_element(By.ID,"mat-radio-3")
+                # lotdot.click()
+                # #等待網頁更改成Lot
+                # WebDriverWait(driver,10).until(
+                # EC.presence_of_all_elements_located((By.CLASS_NAME,"ng-tns-c2400808035-3"))
+                # )
+                # # 點選control 的選項"XN-CHECK_CLOSED"
+                # control_slc = driver.find_element(By.CLASS_NAME, "ng-tns-c2400808035-3")
+                # control_slc.click()
+                # # sleep(2)
+                # control_opt = driver.find_element(By.ID, "mat-option-17")
+                # control_opt.click()
+                # # sleep(2)
+                # ##將需要下載的Lot列成一個List，跑LOOP三次
+                # lot_lst=["mat-option-18","mat-option-19","mat-option-20"]
+                # ##Lot_name_lst是之後需要修改rar或者CSV檔名需要用到的
+                # self.lot_name_lst=[]
+                # for id in lot_lst:
+                #     #點選Lot選項，叫出下拉式選單
+                #     lotno_slc = driver.find_element(By.ID, "mat-select-value-5")
+                #     lotno_slc.click()
+                #     sleep(2)
+                #     ##點選相應的Lot No
+                #     lotno_opt = driver.find_element(By.ID, id)
+                #     lotno_name = driver.find_element(By.ID, id).find_element(By.CLASS_NAME,"mdc-list-item__primary-text").text
+                #     self.lot_name_lst.append(lotno_name)
+                #     lotno_opt.click()
+                #     # sleep(2)
+                #     #點選搜尋按鈕
+                #     src_btn = driver.find_element(By.XPATH, "/html/body/div[7]/m-pages/div/div/div/fqc-intraday-data-csv/fqc-portlet/div/div[2]/div[1]/fqc-search-condition/div/form/div[2]/div[4]/button")
+                #     src_btn.click()
+                #     ##等待網頁下方出現chkbox，再繼續操作
+                #     WebDriverWait(driver,30).until(
+                #         EC.presence_of_all_elements_located((By.CLASS_NAME,"mdc-checkbox"))
+                #     )
+                #     # sleep(5)
+                #     spinner_locator = (By.XPATH, '/html/body/div[7]/m-pages/div/div/div/fqc-intraday-data-csv/fqc-portlet/div/div[2]/div[2]/fqc-analyzer-list/div[1]/mat-spinner')
+                #     WebDriverWait(driver, 30).until(EC.invisibility_of_element_located(spinner_locator))
+                #     #點選兩個chkbox
+                #     chkbox_1 = driver.find_element(By.XPATH, "/html/body/div[7]/m-pages/div/div/div/fqc-intraday-data-csv/fqc-portlet/div/div[2]/div[2]/fqc-analyzer-list/div[3]/div/table/tbody/tr[1]/td[1]/mat-checkbox")
+                #     chkbox_1.click()
 
-                    chkbox_2 = driver.find_element(By.XPATH, "/html/body/div[7]/m-pages/div/div/div/fqc-intraday-data-csv/fqc-portlet/div/div[2]/div[2]/fqc-analyzer-list/div[3]/div/table/tbody/tr[2]/td[1]/mat-checkbox")
-                    chkbox_2.click()
+                #     chkbox_2 = driver.find_element(By.XPATH, "/html/body/div[7]/m-pages/div/div/div/fqc-intraday-data-csv/fqc-portlet/div/div[2]/div[2]/fqc-analyzer-list/div[3]/div/table/tbody/tr[2]/td[1]/mat-checkbox")
+                #     chkbox_2.click()
 
-                    # WebDriverWait(driver,10).until(
-                    #   EC.presence_of_element_located((By.CLASS_NAME,"cdk-overlay-6"))
-                    # )
-                    sleep(3)
-                    ##點選下載按鈕
-                    download_btn = driver.find_element(By.CLASS_NAME, "mat-bottom-sheet-container").find_element(By.TAG_NAME,"button")
-                    download_btn.click()
-                    sleep(5)
+                #     # WebDriverWait(driver,10).until(
+                #     #   EC.presence_of_element_located((By.CLASS_NAME,"cdk-overlay-6"))
+                #     # )
+                #     sleep(3)
+                #     ##點選下載按鈕
+                #     download_btn = driver.find_element(By.CLASS_NAME, "mat-bottom-sheet-container").find_element(By.TAG_NAME,"button")
+                #     download_btn.click()
+                #     sleep(5)
+#################################################################################################
+                 # 創建 requests.Session 以帶入 Cookie
+                session = requests.Session()
+                for cookie in cookies:
+                    # requests cookies 可以用 set
+                    session.cookies.set(cookie['name'], cookie['value'], domain=cookie['domain'])
+                self.lst_downloadpath = sncs_requests.download_global_qc_files(self.download_dir,session)
+                sleep(10)
                 driver.quit()
-                # print(self.lot_name_lst)
-                # self.progress_window.update_progress(20,"處理解壓縮檔案")
-                
+                # # print(self.lot_name_lst)
+                # # self.progress_window.update_progress(20,"處理解壓縮檔案")
+#################################################################################################
             case "處理解壓縮檔案":
                 print("正在解壓縮檔案...")
                 ######更改檔名，改完之後解壓縮
@@ -226,17 +236,18 @@ class DOWNLOAD:
                 ##利用迴圈將資料夾中所有zip檔解壓縮
                 # file_names = [os.path.splitext(os.path.basename(file))[0] for file in sorted_files]
 
-                ##重新命名zip檔
-                new_file_path_list=[]
-                for old_file, new_file in zip(sorted_files, self.lot_name_lst):
-                    new_file_path = os.path.join(self.download_dir, new_file + os.path.splitext(old_file)[1])
-                    os.rename(old_file, new_file_path)
-                    new_file_path_list.append(new_file_path)
+                # ##重新命名zip檔
+                # new_file_path_list=[]
+                # for old_file, new_file in zip(sorted_files, self.lot_name_lst):
+                #     new_file_path = os.path.join(self.download_dir, new_file + os.path.splitext(old_file)[1])
+                #     os.rename(old_file, new_file_path)
+                #     new_file_path_list.append(new_file_path)
 
                 ##更新資料名稱
                 sorted_files = sorted(files)
                 ##利用迴圈將資料夾中所有zip檔解壓縮
-                for zip_file in new_file_path_list:
+                for zip_file in self.lst_downloadpath:
+                # for zip_file in new_file_path_list:
                     zip_path = zip_file
                     folder_name = os.path.splitext(zip_file)[0]
                     # folder_path_1 = os.path.join(self.download_dir, folder_name)
