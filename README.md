@@ -1,3 +1,5 @@
+[![en](https://img.shields.io/badge/lang-English-red.svg)](https://github.com/jonatasemidio/multilanguage-readme-pattern/blob/master/README_EN.md)
+[![en](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/jonatasemidio/multilanguage-readme-pattern/blob/master/README_EN.md)
 # selenium_sncs
 
 # 功能:
@@ -7,6 +9,11 @@
 3. Excel 報告生成：將下載的 CSV 檔案處理為一份整合的 Excel 報告，內含格式化表格、圖表及統計資料（平均值、標準差等）。
 4. 即時進度顯示：使用進度條來顯示下載和處理流程中的當前步驟。
 5. 進階 Excel 格式化：包括自訂儲存格格式、邊框及條件格式，以提升報告的可讀性。
+
+# 示範影片:
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/b8KN8EvTWFM/0.jpg)](https://www.youtube.com/watch?v=b8KN8EvTWFM)
+
 # 使用套件:
 - selenium
 - pandas
